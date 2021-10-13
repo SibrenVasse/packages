@@ -10,22 +10,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch:
-          - arc_archs
-          - arm_cortex-a9_vfpv3-d16
-          - mips_24kc
-          - powerpc_464fp
-          - powerpc_8540
-        runtime_test: [false]
         include:
-          - arch: aarch64_cortex-a53
-            runtime_test: true
-          - arch: arm_cortex-a15_neon-vfpv4
-            runtime_test: true
-          - arch: i386_pentium-mmx
-            runtime_test: true
-          - arch: x86_64
-            runtime_test: true
+          - arch: mipsel_24kc
+            target: mt7621
+            runtime_test: false
 
     steps:
       - uses: actions/checkout@v2
@@ -41,7 +29,9 @@ jobs:
       - name: Determine changed packages
         run: |
           # only detect packages with changes
-          PKG_ROOTS=$(find . -name Makefile | grep -v ".*/src/Makefile" | sed -e 's@./\(.*\)/Makefile@\1/@')
+          PKG_ROOTS=$(find . -name Makefile | \
+            grep -v ".*/src/Makefile" | \
+            sed -e 's@./\(.*\)/Makefile@\1/@')
           CHANGES=$(git diff --diff-filter=d --name-only origin/$BRANCH)
 
           for ROOT in $PKG_ROOTS; do
@@ -55,13 +45,13 @@ jobs:
 
           # fallback to test packages if nothing explicitly changes this is
           # should run if other mechanics in packages.git changed
-          PACKAGES="${PACKAGES:-vim tmux bmon}"
+          PACKAGES="${PACKAGES:-vim attendedsysupgrade-common bmon}"
 
           echo "Building $PACKAGES"
           echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
       - name: Build
-        uses: openwrt/gh-action-sdk@v1
+        uses: openwrt/gh-action-sdk@v3
         env:
           ARCH: ${{ matrix.arch }}-${{ env.BRANCH }}
           FEEDNAME: packages_ci
