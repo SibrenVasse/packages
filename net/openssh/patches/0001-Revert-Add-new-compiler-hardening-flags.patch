@@ -1,0 +1,20 @@
+From f8ee4658b5a93246ae1e4c23c5eb92ec2f3dd5d4 Mon Sep 17 00:00:00 2001
+From: Sibren Vasse <github@sibrenvasse.nl>
+Date: Thu, 24 Feb 2022 16:40:57 +0100
+Subject: [PATCH] Revert "Add new compiler hardening flags."
+
+This reverts commit 39f2111b1d5f00206446257377dcce58cc72369f.
+---
+ configure.ac | 2 --
+ 1 file changed, 2 deletions(-)
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -192,7 +192,6 @@ if test "$GCC" = "yes" || test "$GCC" =
+ 	# actually links. The test program compiled/linked includes a number
+ 	# of integer operations that should exercise this.
+ 	OSSH_CHECK_CFLAG_LINK([-ftrapv])
+-	OSSH_CHECK_CFLAG_COMPILE([-fzero-call-used-regs=all])
+ 	OSSH_CHECK_CFLAG_COMPILE([-ftrivial-auto-var-init=zero])
+     fi
+ 	AC_MSG_CHECKING([gcc version])
