@@ -8,20 +8,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
-PKG_VERSION:=9.7p1
-PKG_RELEASE:=2
+PKG_VERSION:=9.8p1
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
 		https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/
-PKG_HASH:=490426f766d82a2763fcacd8d83ea3d70798750c7bd2aff2e57dc5660f773ffd
+PKG_HASH:=dd8bd002a379b5d499dfb050dd1fa9af8029e80461f4bb6c523c49973f5a39f3
 
 PKG_LICENSE:=BSD ISC
 PKG_LICENSE_FILES:=LICENCE
 PKG_CPE_ID:=cpe:/a:openssh:openssh
 
-#While bumping new version, make sure that it works without it, so it can be removed.
-PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=
 PKG_CONFIG_DEPENDS := \
 	CONFIG_OPENSSH_LIBFIDO2
@@ -181,6 +179,7 @@ CONFIGURE_ARGS += \
 	--with-stackprotect \
 	--with$(if $(CONFIG_OPENSSL_ENGINE),,out)-ssl-engine \
 	--with$(if $(CONFIG_OPENSSH_LIBFIDO2),,out)-security-key-builtin
+    --with-cflags-before="-fzero-call-used-regs=skip"
 	
 ifeq ($(BUILD_VARIANT),with-pam)
 CONFIGURE_ARGS += \
